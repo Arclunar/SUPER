@@ -184,7 +184,8 @@ namespace fsm {
     void Fsm::setGoalPosiAndYaw(const Vec3f &p, const Quatf &q) {
 
         auto click_point = p;
-        if (cfg_.click_height > -5) {
+
+        if (cfg_.click_height > -5 && cfg_.use_fix_click_height) {
             click_point.z() = cfg_.click_height;
         }
 

@@ -171,7 +171,7 @@ namespace marsim {
     void MarsimRender::render_pointcloud(
         const Eigen::Vector3f& camera_pos,
         const Eigen::Quaternionf& camera_q,
-        const decimal_t& t_pattern_start,
+        const double& t_pattern_start,
         pcl::PointCloud<PointType>::Ptr output_pointcloud
     ) {
         ScopeTimer timer("TOTAL", cfg_.print_time_consumption);
@@ -181,22 +181,24 @@ namespace marsim {
             ScopeTimer timer("Fill pattern matrix",  cfg_.print_time_consumption);
             if (cfg_.lidar_type == AVIA) {
                 pattern_matrix.setConstant(0);
-                decimal_t w1 = 763.82589; //7294.0*2.0*3.1415926/60.0
-                decimal_t w2 = -488.41293788; // -4664.0*2.0*3.1415926/60.0
+                double w1 = 763.82589; //7294.0*2.0*3.1415926/60.0
+                double w2 = -488.41293788; // -4664.0*2.0*3.1415926/60.0
                 // int linestep = 2;
                 // decimal_t point_duration = 0.000025;
-                decimal_t point_duration = 0.000004167 * 6;
+                double point_duration = 0.000004167 * 6;
 
-                decimal_t t_duration = 1.0 / cfg_.sensing_rate;
-                decimal_t t_start = t_pattern_start;
+                double t_duration = 1.0 / cfg_.sensing_rate;
 
-                decimal_t scale_x = 0.48 * cfg_.width / 2.0;
-                decimal_t scale_y = 0.43 * cfg_.height / 2.0;
+                static double start_time_ = t_pattern_start; // only set once
+                double t_start = (t_pattern_start - start_time_);
+
+                double scale_x = 0.48 * cfg_.width / 2.0;
+                double scale_y = 0.43 * cfg_.height / 2.0;
 
                 int linestep = ceil(1.4 / 0.2);
                 // std::cout << "linestep = " << linestep << std::endl;
 
-                for (decimal_t t_i = t_start; t_i < t_start + t_duration; t_i = t_i + point_duration) {
+                for (double t_i = t_start; t_i < t_start + t_duration; t_i = t_i + point_duration) {
                     int x = round(scale_x * (cos(w1 * t_i) + cos(w2 * t_i))) + round(0.5 * cfg_.width);
                     int y = round(scale_y * (sin(w1 * t_i) + sin(w2 * t_i))) + round(0.5 * cfg_.height);
 
@@ -236,16 +238,18 @@ namespace marsim {
             }
             else if (cfg_.lidar_type == MID_360) {
                 pattern_matrix.setConstant(0);
-                decimal_t point_duration = 1.0 / 200000.0;
+                double point_duration = 1.0 / 200000.0;
 
-                decimal_t t_duration = 1.0 / cfg_.sensing_rate;
-                decimal_t t_start = t_pattern_start;
+                double t_duration = 1.0 / cfg_.sensing_rate;
+
+                static double start_time_ = t_pattern_start; // only set once
+                double t_start = (t_pattern_start-start_time_);
 
                 //        decimal_t scale_x = 0.48 * cfg_.width / 2.0;
                 //        decimal_t scale_y = 0.43 * cfg_.height / 2.0;
-                decimal_t PI = 3.141519265357;
+                double PI = 3.141519265357;
 
-                for (decimal_t t_i = t_start; t_i < t_start + t_duration; t_i = t_i + point_duration) {
+                for (double t_i = t_start; t_i < t_start + t_duration; t_i = t_i + point_duration) {
                     int x = (int(-round(-62050.63 * t_i + 3.11 * cos(314159.2 * t_i) * sin(628.318 * 2 * t_i))) % 360) /
                         cfg_.polar_resolution;
                     int y = round(
@@ -269,6 +273,7 @@ namespace marsim {
 
                     pattern_matrix(x, y) = 2; // real pattern
                 }
+
             }
         }
 

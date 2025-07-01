@@ -67,6 +67,10 @@ namespace marsim {
             loader.LoadParam("depth_image_en", depth_image_en, false, false);
             loader.LoadParam("inf_point_en", inf_point_en, false, false);
             loader.LoadParam("print_time_consumption", print_time_consumption, false, false);
+            loader.LoadParam("lidar_pitch_offset", lidar_pitch_offset, 0.0, false);
+            loader.LoadParam("lidar_x_offset", lidar_x_offset, 0.0, false);
+            loader.LoadParam("lidar_y_offset", lidar_y_offset, 0.0, false);
+            loader.LoadParam("lidar_z_offset", lidar_z_offset, 0.0, false);
 
             effect_range = cover_dis / sin(0.5 * polar_resolution * M_PI / 180.0);
             width = is_360lidar ? ceil(360.0 / polar_resolution) : ceil(yaw_fov / polar_resolution);
@@ -98,6 +102,11 @@ namespace marsim {
         decimal_t far = 30.0;
         decimal_t u0 = width * 0.5f;
         decimal_t v0 = width * 0.5f;
+
+        double lidar_pitch_offset = 0.0; // in degrees, positive means pitch down forward
+        double lidar_x_offset = 0.0; // in meters, positive means forward
+        double lidar_y_offset = 0.0; // in meters, positive means right
+        double lidar_z_offset = 0.0; // in meters, positive means up
     };
 }
 

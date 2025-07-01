@@ -9,3 +9,10 @@
 **.bin
 **.zip
 **.ply
+
+
+# pcd files
+mars_uav_sim/perfect_drone_sim/pcd/
+
+# Zone.Identifier files
+**:Zone.Identifier

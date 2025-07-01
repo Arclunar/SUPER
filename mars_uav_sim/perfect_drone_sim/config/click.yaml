@@ -1,5 +1,8 @@
 #############| For UAV simulation |#################################
-pcd_name: "random_map_150.pcd"
+# pcd_name: "random_map_150.pcd"
+# pcd_name: "random_map_24_6635.pcd"
+# pcd_name: "random_map_2_26609.pcd"
+pcd_name: "indoor1_001.pcd"
 mesh_resource: "package://perfect_drone_sim/meshes/yunque-M.dae"
 init_position:
   x: 0
@@ -9,11 +12,14 @@ init_yaw: 1.5741
 
 #############|For LiDAR perception simulation |#################################
 is_360lidar: true
-polar_resolution: 0.4
+# polar_resolution: 0.4
+polar_resolution: 0.2
 downsample_res: 0.1
-vertical_fov: 178.0
+# vertical_fov: 178.0
+# 上下对称
+vertical_fov: 90.0
 sensing_blind: 0.1
-sensing_horizon: 70
+sensing_horizon: 15
 sensing_rate: 10
 print_time_consumption: false
 #  enum LiDARType{
@@ -22,8 +28,11 @@ print_time_consumption: false
 #  GENERAL_360 = 2,
 #  MID_360 = 3
 #  };
-lidar_type: 2
+lidar_type: 3
 depth_image_en: false
+yaw_fov: 360
 
-
-
+lidar_pitch_offset : 40.0 # in degrees, positive means pitch down forward
+lidar_x_offset : 0.0 # in meters, positive means forward
+lidar_y_offset : 0.0 # in meters, positive means right
+lidar_z_offset : 0.05 # in meters, positive means up

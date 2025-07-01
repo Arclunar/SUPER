@@ -135,10 +135,19 @@ namespace marsim {
             global_map = cloud_color_mesh.makeShared();
         }
 
-        void renderOnceInWorld(const Eigen::Vector3f& camera_pos,
-                               const Eigen::Quaternionf& camera_q,
-                               const decimal_t& t_pattern_start,
+        void renderOnceInWorld(const Eigen::Vector3f& robot_pos,
+                               const Eigen::Quaternionf& robot_q,
+                               const double& t_pattern_start,
                                pcl::PointCloud<PointType>::Ptr output_pointcloud) {
+
+            // trans from body_position to camera position
+            Eigen::Vector3f camera_pos = robot_pos + robot_q.toRotationMatrix() * 
+                Eigen::Vector3f(static_cast<float>(cfg_.lidar_x_offset), 
+                                static_cast<float>(cfg_.lidar_y_offset), 
+                                static_cast<float>(cfg_.lidar_z_offset));            
+            // trans from body_q to camera q
+            Eigen::Quaternionf camera_q = robot_q * Eigen::AngleAxisf(static_cast<float>(cfg_.lidar_pitch_offset) * M_PI / 180.0, Eigen::Vector3f::UnitY());
+
             render_pointcloud(camera_pos, camera_q, t_pattern_start, output_pointcloud);
         }
 
@@ -191,7 +200,7 @@ namespace marsim {
 
         void render_pointcloud(const Eigen::Vector3f& camera_pos,
                                const Eigen::Quaternionf& camera_q,
-                               const decimal_t& t_pattern_start,
+                               const double& t_pattern_start,
                                pcl::PointCloud<PointType>::Ptr output_pointcloud);
 
         void input_dyn_clouds(pcl::PointCloud<pcl::PointXYZI> input_cloud);
